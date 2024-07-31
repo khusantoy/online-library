@@ -43,7 +43,7 @@ class BookBloc extends Bloc<BookEvent, BookState> {
 
       emit(state.copyWith(
         books: bookRepository.books,
-        isLoading: true,
+        isLoading: false,
       ));
     } catch (e) {
       emit(state.copyWith(

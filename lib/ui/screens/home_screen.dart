@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: BlocBuilder<BookBloc, BookState>(
           bloc: context.read<BookBloc>()..add(GetBooks()),
           builder: (context, state) {
+            print(state);
             if (state.isLoading) {
               return const Center(
                 child: CircularProgressIndicator(),
@@ -53,121 +54,116 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }
 
-            print(state.books);
-
+            if (state.books == null || state.books!.isEmpty) {
+              return const Center(
+                child: Text("Kitoblar mavjud emas"),
+              );
+            }
             final books = state.books!;
 
-            return books.isEmpty
-                ? const Center(
-                    child: Text("Kitoblar mavjud emas"),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Mashxur kitoblar",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
+            return Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Mashxur kitoblar",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 10,
+                        bottom: 5,
+                      ),
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 15,
+                          childAspectRatio: 0.45,
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              top: 10,
-                              bottom: 5,
-                            ),
-                            child: GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 15,
-                                childAspectRatio: 0.55,
-                              ),
-                              itemCount: books.length,
-                              itemBuilder: (context, index) {
-                                final book = books[index];
-                                return Card(
-                                  color: Colors.white,
-                                  clipBehavior: Clip.hardEdge,
+                        itemCount: books.length,
+                        itemBuilder: (context, index) {
+                          final book = books[index];
+                          return Card(
+                            color: Colors.white,
+                            clipBehavior: Clip.hardEdge,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(15),
+                                  width: double.infinity,
+                                  height: 200,
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFFF5EABD),
+                                  ),
+                                  child: Image.asset(book.image),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(15),
-                                        width: double.infinity,
-                                        height: 200,
-                                        decoration: const BoxDecoration(
-                                          color: Color(0xFFF5EABD),
+                                      Text(
+                                        book.title,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
                                         ),
-                                        child: Image.asset(book.image),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              book.title,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                            Text(
-                                              book.author,
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                color: Color(
-                                                  0xFF515151,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 14,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  "${book.price} so'm",
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 36,
-                                                  height: 36,
-                                                  child: IconButton.outlined(
-                                                    onPressed: () {},
-                                                    icon: const Icon(
-                                                        size: 20,
-                                                        Icons
-                                                            .arrow_forward_rounded),
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          ],
+                                      Text(
+                                        book.author,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Color(
+                                            0xFF515151,
+                                          ),
                                         ),
+                                      ),
+                                      const SizedBox(
+                                        height: 14,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "${book.price} so'm",
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 36,
+                                            height: 36,
+                                            child: IconButton.outlined(
+                                              onPressed: () {},
+                                              icon: const Icon(
+                                                  size: 20,
+                                                  Icons.arrow_forward_rounded),
+                                            ),
+                                          ),
+                                        ],
                                       )
                                     ],
                                   ),
-                                );
-                              },
+                                )
+                              ],
                             ),
-                          ),
-                        ),
-                      ],
+                          );
+                        },
+                      ),
                     ),
-                  );
+                  ),
+                ],
+              ),
+            );
           }),
     );
   }
