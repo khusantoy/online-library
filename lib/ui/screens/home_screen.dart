@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:online_library/blocs/book/book_bloc.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:online_library/ui/screens/details_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -76,14 +78,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         top: 10,
                         bottom: 5,
                       ),
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 15,
-                          childAspectRatio: 0.45,
-                        ),
+                      child: MasonryGridView.count(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 5,
+                        mainAxisSpacing: 8,
                         itemCount: books.length,
                         itemBuilder: (context, index) {
                           final book = books[index];
@@ -143,7 +141,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                             width: 36,
                                             height: 36,
                                             child: IconButton.outlined(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        DetailsScreen(
+                                                      book: book,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
                                               icon: const Icon(
                                                   size: 20,
                                                   Icons.arrow_forward_rounded),
